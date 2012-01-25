@@ -1,0 +1,234 @@
+<!DOCTYPE html />
+
+<html>
+<head>
+	<title>IEntityRecord.cs</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link href="../nocco.css" rel="stylesheet" media="all" type="text/css" />
+	<script src="../prettify.js" type="text/javascript"></script>
+</head>
+<body onload="prettyPrint()">
+	<div id="container">
+		<div id="background"></div>
+			<div id="jump_to">
+				Jump To &hellip;
+				<div id="jump_wrapper">
+					<div id="jump_page">
+							<a class="source" href="../index.html">
+								ComponentKit
+							</a>
+							<a class="source" href="../componentkit/componentsynceventargs.html">
+								ComponentKit\ComponentSyncEventArgs.cs
+							</a>
+							<a class="source" href="../componentkit/entityeventargs.html">
+								ComponentKit\EntityEventArgs.cs
+							</a>
+							<a class="source" href="../componentkit/icomponent.html">
+								ComponentKit\IComponent.cs
+							</a>
+							<a class="source" href="../componentkit/ientityrecord.html">
+								ComponentKit\IEntityRecord.cs
+							</a>
+							<a class="source" href="../componentkit/ientityrecordcollection.html">
+								ComponentKit\IEntityRecordCollection.cs
+							</a>
+							<a class="source" href="../componentkit/isynchronizable.html">
+								ComponentKit\ISynchronizable.cs
+							</a>
+							<a class="source" href="../componentkit/isyncstate.html">
+								ComponentKit\ISyncState.cs
+							</a>
+							<a class="source" href="../componentkit/model/componentstateeventargs.html">
+								ComponentKit\Model\ComponentStateEventArgs.cs
+							</a>
+							<a class="source" href="../componentkit/model/dependencycomponent.html">
+								ComponentKit\Model\DependencyComponent.cs
+							</a>
+							<a class="source" href="../componentkit/model/entity.html">
+								ComponentKit\Model\Entity.cs
+							</a>
+							<a class="source" href="../componentkit/model/entityrecord.html">
+								ComponentKit\Model\EntityRecord.cs
+							</a>
+							<a class="source" href="../componentkit/model/entityrecordstore.html">
+								ComponentKit\Model\EntityRecordStore.cs
+							</a>
+							<a class="source" href="../componentkit/model/entityregistry.html">
+								ComponentKit\Model\EntityRegistry.cs
+							</a>
+							<a class="source" href="../componentkit/model/requirecomponentattribute.html">
+								ComponentKit\Model\RequireComponentAttribute.cs
+							</a>
+					</div>
+				</div>
+			</div>
+		<table cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th class="docs">
+						<h1>IEntityRecord.cs</h1>
+					</th>
+					<th class="code"></th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr id="section_1">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_1">&#182;</a>
+							</div>
+							<h3>TL;DR..</h3>
+
+<p>Throughout these documents, an <code>IEntityRecord</code> will be referred to as an <em>entity</em>. You can visualize it as a <strong>row</strong> in a database table, where each <strong>column</strong> holds a <strong>component</strong>. </p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_2">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_2">&#182;</a>
+							</div>
+							<h4>Similarities and differences</h4>
+
+<p>Just like in a regular database, it's not possible to have 2 identical rows. And, in most implementations, it's not possible to attach more 
+than one column/component of the same type to a single entity - though I guess that actually makes it quite dissimilar.</p>
+
+<p>But, since the components are just instances of real classes, they're not limited to being specific datatypes, and instead of simply 
+providing data, they can have behavior too.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_3">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_3">&#182;</a>
+							</div>
+							<h2>Source</h2>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>using System;
+using System.Collections.Generic;
+
+namespace ComponentKit {
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_4">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_4">&#182;</a>
+							</div>
+							<p>Defines a single and uniquely identifiable entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>    public interface IEntityRecord : ISynchronizable, IEquatable&lt;IEntityRecord&gt; {
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_5">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_5">&#182;</a>
+							</div>
+							<p>Gets the unique name identifier for the entity.</p>
+
+<blockquote>
+  <p>It is debatable whether this should be considered an implementation detail, and not be exposed at all.</p>
+</blockquote>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        string Name {
+            get;
+            set;
+        }
+        
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_6">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_6">&#182;</a>
+							</div>
+							<p>Gets the registry that the entity is registered to (when in a synchronized state).</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        IEntityRecordCollection Registry {
+            get;
+            set;
+        }
+        
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_7">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_7">&#182;</a>
+							</div>
+							<p>Gets a component that matches the specified type name, if it is attached to the entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        IComponent this[string componentNameOrType] { get; }
+        
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_8">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_8">&#182;</a>
+							</div>
+							<h3>Messaging</h3>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_9">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_9">&#182;</a>
+							</div>
+							<p>Notifies all attached components with a message containing arbitrary data.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        void Notify&lt;T&gt;(string message, T data);
+    }
+}
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_10">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_10">&#182;</a>
+							</div>
+							<p>Copyright 2012 Jacob H. Hansen.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'></code></pre>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

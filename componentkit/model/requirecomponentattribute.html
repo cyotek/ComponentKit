@@ -1,0 +1,186 @@
+<!DOCTYPE html />
+
+<html>
+<head>
+	<title>RequireComponentAttribute.cs</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link href="../../nocco.css" rel="stylesheet" media="all" type="text/css" />
+	<script src="../../prettify.js" type="text/javascript"></script>
+</head>
+<body onload="prettyPrint()">
+	<div id="container">
+		<div id="background"></div>
+			<div id="jump_to">
+				Jump To &hellip;
+				<div id="jump_wrapper">
+					<div id="jump_page">
+							<a class="source" href="../../index.html">
+								ComponentKit
+							</a>
+							<a class="source" href="../componentsynceventargs.html">
+								ComponentKit\ComponentSyncEventArgs.cs
+							</a>
+							<a class="source" href="../entityeventargs.html">
+								ComponentKit\EntityEventArgs.cs
+							</a>
+							<a class="source" href="../icomponent.html">
+								ComponentKit\IComponent.cs
+							</a>
+							<a class="source" href="../ientityrecord.html">
+								ComponentKit\IEntityRecord.cs
+							</a>
+							<a class="source" href="../ientityrecordcollection.html">
+								ComponentKit\IEntityRecordCollection.cs
+							</a>
+							<a class="source" href="../isynchronizable.html">
+								ComponentKit\ISynchronizable.cs
+							</a>
+							<a class="source" href="../isyncstate.html">
+								ComponentKit\ISyncState.cs
+							</a>
+							<a class="source" href="componentstateeventargs.html">
+								ComponentKit\Model\ComponentStateEventArgs.cs
+							</a>
+							<a class="source" href="dependencycomponent.html">
+								ComponentKit\Model\DependencyComponent.cs
+							</a>
+							<a class="source" href="entity.html">
+								ComponentKit\Model\Entity.cs
+							</a>
+							<a class="source" href="entityrecord.html">
+								ComponentKit\Model\EntityRecord.cs
+							</a>
+							<a class="source" href="entityrecordstore.html">
+								ComponentKit\Model\EntityRecordStore.cs
+							</a>
+							<a class="source" href="entityregistry.html">
+								ComponentKit\Model\EntityRegistry.cs
+							</a>
+							<a class="source" href="requirecomponentattribute.html">
+								ComponentKit\Model\RequireComponentAttribute.cs
+							</a>
+					</div>
+				</div>
+			</div>
+		<table cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th class="docs">
+						<h1>RequireComponentAttribute.cs</h1>
+					</th>
+					<th class="code"></th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr id="section_1">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_1">&#182;</a>
+							</div>
+							<h3>TL;DR..</h3>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_2">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_2">&#182;</a>
+							</div>
+							<p>Too bad, because this part is missing right now ^_^</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_3">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_3">&#182;</a>
+							</div>
+							<h2>Source</h2>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>using System;
+
+namespace ComponentKit.Model {
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_4">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_4">&#182;</a>
+							</div>
+							<p>Indicates that a <code>Component</code> field should be treated as a dependency.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+    public sealed class RequireComponentAttribute : Attribute {
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_5">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_5">&#182;</a>
+							</div>
+							<p>Gets or sets the entity that the dependency should be retrieved from.</p>
+
+<blockquote>
+  <p>If this is not specified, it defaults to the entity that the component is currently attached to.</p>
+</blockquote>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public string FromRecordNamed {
+            get;
+            set;
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_6">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_6">&#182;</a>
+							</div>
+							<p>Gets or sets whether the dependency can be a subclass of the specified component type.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public bool AllowDerivedTypes {
+            get;
+            set;
+        }
+    }
+}
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_7">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_7">&#182;</a>
+							</div>
+							<p>Copyright 2012 Jacob H. Hansen.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'></code></pre>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

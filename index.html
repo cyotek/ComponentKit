@@ -1,88 +1,119 @@
-<!DOCTYPE html>
+<!DOCTYPE html />
+
 <html>
 <head>
-  <meta charset='utf-8'>
-
-  <title>shrt/ComponentKit @ GitHub</title>
-
-  <style type="text/css">
-    body {
-      margin-top: 1.0em;
-      background-color: #34088d;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
-      color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-    h1 { font-size: 3.8em; color: #cbf772; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #cbf772; }
-    h3 { text-align: center; color: #cbf772; }
-    a { color: #cbf772; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-  </style>
+	<title>ComponentKit</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link href="nocco.css" rel="stylesheet" media="all" type="text/css" />
+	<script src="prettify.js" type="text/javascript"></script>
 </head>
+<body onload="prettyPrint()">
+	<div id="container">
+		<div id="background"></div>
+			<div id="jump_to">
+				Jump To &hellip;
+				<div id="jump_wrapper">
+					<div id="jump_page">
+							<a class="source" href="componentkit/componentsynceventargs.html">
+								ComponentKit\ComponentSyncEventArgs.cs
+							</a>
+							<a class="source" href="componentkit/entityeventargs.html">
+								ComponentKit\EntityEventArgs.cs
+							</a>
+							<a class="source" href="componentkit/icomponent.html">
+								ComponentKit\IComponent.cs
+							</a>
+							<a class="source" href="componentkit/ientityrecord.html">
+								ComponentKit\IEntityRecord.cs
+							</a>
+							<a class="source" href="componentkit/ientityrecordcollection.html">
+								ComponentKit\IEntityRecordCollection.cs
+							</a>
+							<a class="source" href="componentkit/isynchronizable.html">
+								ComponentKit\ISynchronizable.cs
+							</a>
+							<a class="source" href="componentkit/isyncstate.html">
+								ComponentKit\ISyncState.cs
+							</a>
+							<a class="source" href="componentkit/model/componentstateeventargs.html">
+								ComponentKit\Model\ComponentStateEventArgs.cs
+							</a>
+							<a class="source" href="componentkit/model/dependencycomponent.html">
+								ComponentKit\Model\DependencyComponent.cs
+							</a>
+							<a class="source" href="componentkit/model/entity.html">
+								ComponentKit\Model\Entity.cs
+							</a>
+							<a class="source" href="componentkit/model/entityrecord.html">
+								ComponentKit\Model\EntityRecord.cs
+							</a>
+							<a class="source" href="componentkit/model/entityrecordstore.html">
+								ComponentKit\Model\EntityRecordStore.cs
+							</a>
+							<a class="source" href="componentkit/model/entityregistry.html">
+								ComponentKit\Model\EntityRegistry.cs
+							</a>
+							<a class="source" href="componentkit/model/requirecomponentattribute.html">
+								ComponentKit\Model\RequireComponentAttribute.cs
+							</a>
+					</div>
+				</div>
+			</div>
+		<table cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th class="docs">
+						<h1>ComponentKit</h1>
+					</th>
+					<th class="code"></th>
+				</tr>
+			</thead>
+			<tbody>
+					<tr id="section_1">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_1">&#182;</a>
+							</div>
+							<p>Copyright 2012 Jacob H. Hansen.<br />
+<em>This project and all source code is subject to the terms and conditions defined in the <a href="https://github.com/shrt/ComponentKit/blob/master/LICENSE">'License'</a>.</em></p>
 
-<body>
-  <a href="https://github.com/shrt/ComponentKit"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_2">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_2">&#182;</a>
+							</div>
+							<h3>What it is</h3>
 
-  <div id="container">
+<p><strong>ComponentKit</strong> provides a set of <strong>C#</strong> interfaces and classes that are useful when you need to maintain an <strong>in-memory database</strong> of <strong>entity</strong> composites.</p>
 
-    <div class="download">
-      <a href="https://github.com/shrt/ComponentKit/zipball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/zip.png"></a>
-      <a href="https://github.com/shrt/ComponentKit/tarball/master">
-        <img border="0" width="90" src="https://github.com/images/modules/download/tar.png"></a>
-    </div>
+<p>Features include: <strong>triggers</strong>, for handling the processing of components, <strong>dependency injection</strong>, and some very basic <strong>inter-component messaging</strong>.</p>
 
-    <h1><a href="https://github.com/shrt/ComponentKit">ComponentKit</a>
-      <span class="small">by <a href="https://github.com/shrt">shrt</a></span></h1>
+<p>The programming model is similar to that found in these cool things:</p>
 
-    <div class="description">
-      An in-memory object database for entities composed by a set of components.
-    </div>
+<ul>
+<li>The scripting in <a href="http://www.unity3d.com">Unity3D</a></li>
+<li><a href="http://pushbuttonengine.com">PushButton Engine V2</a></li>
+</ul>
 
-    
+<p>Though originally intended as an educational reference/example on how to implement <em>yet another entity system</em>, it should be perfectly fine for use in real productions too.</p>
 
-    
+<p>Further <strong>documentation</strong> can be found through the button at the upper-right corner of this page. All documentation has been generated straight from the source, using <a href="http://dontangg.github.com/nocco/">Nocco</a>.</p>
 
-    
+<p>The complete <a href="http://github.com/shrt/ComponentKit">source for ComponentKit</a> can be found at github. Do with it what you want!</p>
 
-    
-
-    
-      <h2>Authors</h2>
-      <p>Jacob H. Hansen (jacob.hansen@shrt.info)<br/>      </p>
-    
-
-    
-      <h2>Contact</h2>
-      <p>Jacob H. Hansen (jacob.hansen@shrt.info)<br/>      </p>
-    
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/shrt/ComponentKit/zipball/master">zip</a> or
-      <a href="https://github.com/shrt/ComponentKit/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/shrt/ComponentKit</pre>
-    </p>
-
-    <div class="footer">
-      get the source code on GitHub : <a href="https://github.com/shrt/ComponentKit">shrt/ComponentKit</a>
-    </div>
-
-  </div>
-
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'></code></pre>
+						</td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
 </body>
 </html>
