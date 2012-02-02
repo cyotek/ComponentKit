@@ -37,6 +37,9 @@
 							<a class="source" href="../icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="../ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="../ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="../model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="../model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="../model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -104,9 +110,8 @@
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_2">&#182;</a>
 							</div>
-							<p>This concrete implementation of <code>IEntityRecord</code> is a <strong>struct</strong>, and uses its <strong>Name</strong> property to determine equality.</p>
-
-<p>The fact that it is a struct means that instances can be created on the fly pretty much without penalty.</p>
+							<p>This concrete implementation of <code>IEntityRecord</code> is a <strong>struct</strong>, and uses its <strong>Name</strong> property 
+to determine equality.</p>
 
 						</td>
 						<td class="code">
@@ -125,6 +130,7 @@
 						<td class="code">
 							<pre><code class='prettyprint'>using System;
 using System.Dynamic;
+using System.Collections.Generic;
 
 namespace ComponentKit.Model {
 </code></pre>
@@ -216,8 +222,8 @@ namespace ComponentKit.Model {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_8">&#182;</a>
 							</div>
-							<p>The name is only allowed to be set once. This is necessary, because since <code>EntityRecord</code> is a struct, it will always have an empty constructor.
-And when this is used, the instance becomes useless without being able to ever have a <strong>Name</strong>.</p>
+							<p>The name is only allowed to be set once. Because the name is used for determining identity, 
+being able to mutate it would cause leaks in the <code>Dictionaries</code> containing the entities.</p>
 
 						</td>
 						<td class="code">
@@ -234,8 +240,8 @@ And when this is used, the instance becomes useless without being able to ever h
 								<a class="pilcrow" href="#section_9">&#182;</a>
 							</div>
 							<blockquote>
-  <p>If you want to rename an entity, it's usually done by simply moving the components into a new one.
-  Since the name is used for determining identity, being able to mutate it would cause leaks in the <code>Dictionaries</code> containing the entities.</p>
+  <p>If you want to rename an entity, it's usually done by simply
+  moving the component into a new one.</p>
 </blockquote>
 
 						</td>
@@ -273,7 +279,8 @@ And when this is used, the instance becomes useless without being able to ever h
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_11">&#182;</a>
 							</div>
-							<p>When set to a different registry, this entity will automatically be registered into the new one when synchronized.</p>
+							<p>When set to a different registry, this entity will automatically be registered into the new 
+one when synchronized.</p>
 
 						</td>
 						<td class="code">
@@ -324,8 +331,8 @@ And when this is used, the instance becomes useless without being able to ever h
 							<p>Creates a new entity with the specified name.</p>
 
 <blockquote>
-  <p>The entity will be out-of-sync until it has a registry, so this constructor is usually only used when you need to query the
-  registry for a certain entity (since its name == its identity).</p>
+  <p>The entity will be out-of-sync until it has a registry, so this constructor is usually only used 
+  when you need to query the registry for a certain entity (since its name == its identity).</p>
 </blockquote>
 
 						</td>
@@ -446,8 +453,10 @@ And when this is used, the instance becomes useless without being able to ever h
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_20">&#182;</a>
 							</div>
-							<p>Unfortunately, overloading the operators will not work for comparing 2 instances of <code>IEntityRecord</code> (which is the exposed interface). 
-It sucks, but because this is a compile-time feature, it will only work when comparing instances that have been cast to <code>EntityRecord</code>. This is no good.</p>
+							<p>Unfortunately, overloading the operators will not work for comparing 2 instances of <code>IEntityRecord</code> 
+(which is the exposed interface). 
+It sucks, but because this is a compile-time feature, it will only work when comparing instances 
+that have been cast to <code>EntityRecord</code>. Not great.</p>
 
 						</td>
 						<td class="code">
@@ -461,6 +470,30 @@ It sucks, but because this is a compile-time feature, it will only work when com
 
         public static bool operator !=(EntityRecord left, EntityRecord right) {
             return !(left == right);
+        }
+
+        public IEnumerator&lt;IComponent&gt; GetEnumerator() {
+            if (Registry == null) {
+                return null;
+            }
+
+            return Registry.GetComponents(this).GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
+        public override string ToString() {
+            string components = &quot;&quot;;
+
+            foreach (IComponent component in this) {
+                components += String.Format(&quot;{0}{1}, &quot;, component.IsOutOfSync ? &quot;*&quot; : &quot;&quot;, component.GetType().Name);
+            }
+
+            components = components.Remove(components.Length - 2);
+
+            return String.Format(&quot;&#39;{0}&#39;: {{ {1} }}&quot;, Name, components);
         }
     }
 }

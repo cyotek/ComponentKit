@@ -37,6 +37,9 @@
 							<a class="source" href="../icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="../ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="../ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="../model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="../model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="../model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -93,6 +99,13 @@
 							</div>
 							<h3>TL;DR..</h3>
 
+<p>When you want to reference a component automatically, you use this.</p>
+
+<p>This attribute is not very practical when reach goes beyond referencing components 
+from the same entity; you see, in order to retrieve the component from somewhere
+else, you first need to be able to identify the target. But, in a dynamic scenario 
+it's unlikely that the target is known at compile time.</p>
+
 						</td>
 						<td class="code">
 							<pre><code class='prettyprint'>
@@ -104,19 +117,6 @@
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_2">&#182;</a>
 							</div>
-							<p>Too bad, because this part is missing right now ^_^</p>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_3">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_3">&#182;</a>
-							</div>
 							<h2>Source</h2>
 
 						</td>
@@ -127,10 +127,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_4">
+					<tr id="section_3">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_4">&#182;</a>
+								<a class="pilcrow" href="#section_3">&#182;</a>
 							</div>
 							<p>Indicates that an <code>IComponent</code> field should be treated as a dependency.</p>
 
@@ -138,6 +138,24 @@ namespace ComponentKit.Model {
 						<td class="code">
 							<pre><code class='prettyprint'>    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
     public sealed class RequireComponentAttribute : Attribute {
+        public RequireComponentAttribute() {
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_4">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_4">&#182;</a>
+							</div>
+							<blockquote>
+  <p>Default to automatically injecting if possible.</p>
+</blockquote>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>            Automatically = true;
+        }
+
 </code></pre>
 						</td>
 					</tr>
@@ -167,6 +185,23 @@ namespace ComponentKit.Model {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_6">&#182;</a>
 							</div>
+							<p>Gets or sets whether the dependency should be automatically injected if possible.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public bool Automatically {
+            get;
+            set;
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_7">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_7">&#182;</a>
+							</div>
 							<p>Gets or sets whether the dependency can be a subclass of the specified component type.</p>
 
 						</td>
@@ -181,10 +216,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_7">
+					<tr id="section_8">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_7">&#182;</a>
+								<a class="pilcrow" href="#section_8">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

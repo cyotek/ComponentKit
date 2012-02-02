@@ -37,6 +37,9 @@
 							<a class="source" href="icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -145,7 +151,7 @@ namespace ComponentKit {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>    public interface IEntityRecord : ISynchronizable, IEquatable&lt;IEntityRecord&gt; {
+							<pre><code class='prettyprint'>    public interface IEntityRecord : ISynchronizable, IEquatable&lt;IEntityRecord&gt;, IEnumerable&lt;IComponent&gt; {
 </code></pre>
 						</td>
 					</tr>
@@ -226,6 +232,7 @@ namespace ComponentKit {
 							<pre><code class='prettyprint'>        void Notify&lt;T&gt;(string message, T data);
     }
 }
+
 </code></pre>
 						</td>
 					</tr>

@@ -37,6 +37,9 @@
 							<a class="source" href="icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -104,7 +110,8 @@
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_2">&#182;</a>
 							</div>
-							<p>Too bad, because this part is missing right now ^_^</p>
+							<p>Components and entities needed a way to communicate whether they had 
+changed and should be processed again.</p>
 
 						</td>
 						<td class="code">
@@ -152,6 +159,7 @@ namespace ComponentKit {
 							<pre><code class='prettyprint'>        bool IsOutOfSync { get; }
     }
 }
+
 </code></pre>
 						</td>
 					</tr>

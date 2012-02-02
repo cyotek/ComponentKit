@@ -37,6 +37,9 @@
 							<a class="source" href="icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -93,6 +99,8 @@
 							</div>
 							<h3>TL;DR..</h3>
 
+<p>When a bunch of components requires processing from <strong>trigger handlers</strong>, these are used.</p>
+
 						</td>
 						<td class="code">
 							<pre><code class='prettyprint'>
@@ -104,11 +112,15 @@
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_2">&#182;</a>
 							</div>
-							<p>Too bad, because this part is missing right now ^_^</p>
+							<h2>Source</h2>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>
+							<pre><code class='prettyprint'>using System;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace ComponentKit {
 </code></pre>
 						</td>
 					</tr>
@@ -116,22 +128,6 @@
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_3">&#182;</a>
-							</div>
-							<h2>Source</h2>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>using System;
-using System.Collections.Generic;
-
-namespace ComponentKit {
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_4">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_4">&#182;</a>
 							</div>
 							<p>Encapsulates a method that determines whether a component enables a trigger.</p>
 
@@ -142,10 +138,10 @@ namespace ComponentKit {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_5">
+					<tr id="section_4">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_5">&#182;</a>
+								<a class="pilcrow" href="#section_4">&#182;</a>
 							</div>
 							<p>Provides the components that enabled a trigger during a synchronization operation.</p>
 
@@ -159,10 +155,10 @@ namespace ComponentKit {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_6">
+					<tr id="section_5">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_6">&#182;</a>
+								<a class="pilcrow" href="#section_5">&#182;</a>
 							</div>
 							<p>Gets the components that enabled a trigger.</p>
 
@@ -172,8 +168,25 @@ namespace ComponentKit {
             get;
             private set;
         }
-    }
-}
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_6">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_6">&#182;</a>
+							</div>
+							<p>Retrieves all components that have been dettached.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public IEnumerable&lt;IComponent&gt; DettachedComponents {
+            get {
+                return Components.Where(c =&gt; c.IsOutOfSync);
+            }
+        }
+
 </code></pre>
 						</td>
 					</tr>
@@ -181,6 +194,26 @@ namespace ComponentKit {
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_7">&#182;</a>
+							</div>
+							<p>Retrieves all components that have been attached.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public IEnumerable&lt;IComponent&gt; AttachedComponents {
+            get {
+                return Components.Where(c =&gt; !c.IsOutOfSync);
+            }
+        }
+    }
+}
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_8">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_8">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

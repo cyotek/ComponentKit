@@ -37,6 +37,9 @@
 							<a class="source" href="icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -104,7 +110,14 @@
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_2">&#182;</a>
 							</div>
-							<p>Too bad, because this part is missing right now ^_^</p>
+							<p>Components and entities needed a way to do whatever action necessary to become in sync.</p>
+
+<h4>More</h4>
+
+<p>Components and entities can be entered, altered or even removed as the app runs. 
+But, depending on intent, these kinds of changes may cause a component to slip out of sync.</p>
+
+<p>Calling <code>Synchronize()</code> causes any changes to be <em>committed</em>, so to speak.</p>
 
 						</td>
 						<td class="code">
@@ -152,6 +165,7 @@ namespace ComponentKit {
 							<pre><code class='prettyprint'>        void Synchronize();
     }
 }
+
 </code></pre>
 						</td>
 					</tr>

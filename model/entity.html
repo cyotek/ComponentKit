@@ -37,6 +37,9 @@
 							<a class="source" href="../icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="../ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="../ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="../model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="../model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="../model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -93,7 +99,7 @@
 							</div>
 							<h3>TL;DR..</h3>
 
-<p>Too bad, because this part is missing right now ^_^</p>
+<p>Convenience methods to reduce the amount of necessary boilerplate code.</p>
 
 						</td>
 						<td class="code">
@@ -127,6 +133,9 @@ namespace ComponentKit.Model {
 						</td>
 						<td class="code">
 							<pre><code class='prettyprint'>    public static class Entity {
+        static readonly IEntityDefinitionCollection&lt;string&gt; _definitions = 
+            new EntityDefinitions();
+
 </code></pre>
 						</td>
 					</tr>
@@ -293,11 +302,15 @@ A unique name is automatically generated.</p>
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_13">&#182;</a>
 							</div>
-							<h3>Retrieval</h3>
+							<p>Defines a range of components by name. 
+The definition is only created if at least one valid component type is specified.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>
+							<pre><code class='prettyprint'>        public static void Define(string definition, params Type[] componentTypes) {
+            _definitions.Define(definition, componentTypes);
+        }
+
 </code></pre>
 						</td>
 					</tr>
@@ -306,7 +319,85 @@ A unique name is automatically generated.</p>
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_14">&#182;</a>
 							</div>
-							<p>Attempts to find the entity that matches the specified name in the active registry.</p>
+							<p>Defines a range of components by name, with the option to include a previously defined range. 
+The definition is only established if at least one valid component type is specified.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static void Define(string definition, string inheritFromDefinition, params Type[] types) {
+            _definitions.Define(definition, inheritFromDefinition, types);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_15">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_15">&#182;</a>
+							</div>
+							<p>Removes the component definition for the given name.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static bool Undefine(string definition) {
+            return _definitions.Undefine(definition);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_16">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_16">&#182;</a>
+							</div>
+							<p>Creates an entity from the specified definition and registers it in the active registry.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static IEntityRecord CreateFromDefinition(string definition) {
+            return _definitions.Make(definition);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_17">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_17">&#182;</a>
+							</div>
+							<p>Creates an entity from the specified definition and registers it in the active registry.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static IEntityRecord CreateFromDefinition(string definition, string name) {
+            return _definitions.Make(definition, Create(name));
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_18">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_18">&#182;</a>
+							</div>
+							<h3>Retrieval</h3>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_19">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_19">&#182;</a>
+							</div>
+							<p>Attempts to find the entity that matches the specified name in the active registry. Returns <code>null</code> if none was found.</p>
 
 						</td>
 						<td class="code">
@@ -317,12 +408,12 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_15">
+					<tr id="section_20">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_15">&#182;</a>
+								<a class="pilcrow" href="#section_20">&#182;</a>
 							</div>
-							<p>Attempts to find the entity that matches the specified name in a registry.</p>
+							<p>Attempts to find the entity that matches the specified name in a registry. Returns <code>null</code> if none was found.</p>
 
 						</td>
 						<td class="code">
@@ -339,10 +430,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_16">
+					<tr id="section_21">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_16">&#182;</a>
+								<a class="pilcrow" href="#section_21">&#182;</a>
 							</div>
 							<h3>Messaging</h3>
 
@@ -352,10 +443,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_17">
+					<tr id="section_22">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_17">&#182;</a>
+								<a class="pilcrow" href="#section_22">&#182;</a>
 							</div>
 							<p>Broadcasts a message to every single component that is currently attached to an entity in the active registry.</p>
 
@@ -368,10 +459,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_18">
+					<tr id="section_23">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_18">&#182;</a>
+								<a class="pilcrow" href="#section_23">&#182;</a>
 							</div>
 							<p>Broadcasts a message to every single component that is currently attached to an entity in the specified registry.</p>
 
@@ -391,23 +482,23 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_19">
+					<tr id="section_24">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_19">&#182;</a>
+								<a class="pilcrow" href="#section_24">&#182;</a>
 							</div>
 							<p>Convenient methods for dealing with entities.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>    public static class EntityExtensions {
+							<pre><code class='prettyprint'>    public static class EntityRecordExtensions {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_20">
+					<tr id="section_25">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_20">&#182;</a>
+								<a class="pilcrow" href="#section_25">&#182;</a>
 							</div>
 							<h3>Manipulation</h3>
 
@@ -417,10 +508,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_21">
+					<tr id="section_26">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_21">&#182;</a>
+								<a class="pilcrow" href="#section_26">&#182;</a>
 							</div>
 							<p>Attaches a component to this entity.</p>
 
@@ -435,10 +526,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_22">
+					<tr id="section_27">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_22">&#182;</a>
+								<a class="pilcrow" href="#section_27">&#182;</a>
 							</div>
 							<p>Dettaches a component from this entity.</p>
 
@@ -453,10 +544,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_23">
+					<tr id="section_28">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_23">&#182;</a>
+								<a class="pilcrow" href="#section_28">&#182;</a>
 							</div>
 							<p>Unregisters this entity from its registry.</p>
 
@@ -471,10 +562,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_24">
+					<tr id="section_29">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_24">&#182;</a>
+								<a class="pilcrow" href="#section_29">&#182;</a>
 							</div>
 							<h3>Component retrieval</h3>
 
@@ -484,16 +575,16 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_25">
+					<tr id="section_30">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_25">&#182;</a>
+								<a class="pilcrow" href="#section_30">&#182;</a>
 							</div>
 							<p>Returns a component of the specified type if it is attached to this entity.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity) where T : IComponent {
+							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity) where T : class, IComponent {
             return entity.Registry == null ?
                 default(T) :
                 entity.Registry.GetComponent&lt;T&gt;(entity);
@@ -502,16 +593,16 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_26">
+					<tr id="section_31">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_26">&#182;</a>
+								<a class="pilcrow" href="#section_31">&#182;</a>
 							</div>
 							<p>Returns a component of the specified type if it is attached to this entity.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity, T component) where T : IComponent {
+							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity, T component) where T : class, IComponent {
             return entity.Registry == null ?
                 default(T) :
                 entity.Registry.GetComponent(entity, component);
@@ -520,16 +611,16 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_27">
+					<tr id="section_32">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_27">&#182;</a>
+								<a class="pilcrow" href="#section_32">&#182;</a>
 							</div>
 							<p>If <code>allowingDerivedTypes</code> is <code>true</code>, returns any component that is either a subclass of, or is, the specified type if it is attached to this entity.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity, T component, bool allowingDerivedTypes) where T : IComponent {
+							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity, T component, bool allowingDerivedTypes) where T : class, IComponent {
             return entity.Registry == null ?
                 default(T) :
                 entity.Registry.GetComponent(entity, component, allowingDerivedTypes);
@@ -538,10 +629,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_28">
+					<tr id="section_33">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_28">&#182;</a>
+								<a class="pilcrow" href="#section_33">&#182;</a>
 							</div>
 							<p>Gets all components currently attached to this entity.</p>
 
@@ -552,12 +643,24 @@ A unique name is automatically generated.</p>
                 null :
                 entity.Registry.GetComponents(entity);
         }
+        /*
+        public static IEnumerable&lt;T&gt; GetComponents&lt;T&gt;(this IEntityRecord entity) where T : class, IComponent {
+            IList&lt;T&gt; components = new List&lt;T&gt;();
 
-        public static bool HasComponent&lt;T&gt;(this IEntityRecord entity) where T : IComponent {
+            foreach (IComponent component in entity) {
+                if (component is T) {
+                    components.Add(component as T);
+                }
+            }
+
+            return components;
+        }
+        */
+        public static bool HasComponent&lt;T&gt;(this IEntityRecord entity) where T : class, IComponent {
             return GetComponent&lt;T&gt;(entity) != null;
         }
 
-        public static bool HasComponent&lt;T&gt;(this IEntityRecord entity, T component) where T : IComponent {
+        public static bool HasComponent&lt;T&gt;(this IEntityRecord entity, T component) where T : class, IComponent {
             return GetComponent&lt;T&gt;(entity, component) != null;
         }
     }
@@ -566,10 +669,10 @@ A unique name is automatically generated.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_29">
+					<tr id="section_34">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_29">&#182;</a>
+								<a class="pilcrow" href="#section_34">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

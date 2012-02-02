@@ -37,6 +37,9 @@
 							<a class="source" href="../icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="../ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="../ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="../model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="../model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="../model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -93,7 +99,8 @@
 							</div>
 							<h3>TL;DR..</h3>
 
-<p>The <code>DependencyComponent</code> is a <code>Component</code> that is aware of its dependencies, and will automatically attempt to inject them during synchronization.</p>
+<p>The <code>DependencyComponent</code> is a <code>Component</code> that is aware of its dependencies, 
+and will automatically attempt to inject them during synchronization.</p>
 
 						</td>
 						<td class="code">
@@ -112,8 +119,8 @@
 						<td class="code">
 							<pre><code class='prettyprint'>using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Reflection;
+using System.Globalization;
 
 namespace ComponentKit.Model {
 </code></pre>
@@ -141,7 +148,9 @@ namespace ComponentKit.Model {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_4">&#182;</a>
 							</div>
-							<p>Since the base constructor is guaranteed to be called (even if implemented in a subclass without calling <code>base()</code>), this opportunity is used to immediately discover the required dependencies.</p>
+							<p>Since the base constructor is guaranteed to be called (even if 
+implemented in a subclass without calling <code>base()</code>), this opportunity 
+is used to immediately discover the required dependencies.</p>
 
 						</td>
 						<td class="code">
@@ -155,7 +164,9 @@ namespace ComponentKit.Model {
 								<a class="pilcrow" href="#section_5">&#182;</a>
 							</div>
 							<blockquote>
-  <p>Note that for dependency injection to work, all components must be instantiable and have an empty constructor. However, it is not necessary to implement one.</p>
+  <p>Note that for dependency injection to work, all components must 
+  be instantiable and have an empty constructor. However, it is not 
+  necessary to implement one.</p>
 </blockquote>
 
 						</td>
@@ -186,8 +197,10 @@ namespace ComponentKit.Model {
 								<a class="pilcrow" href="#section_7">&#182;</a>
 							</div>
 							<blockquote>
-  <p>It wouldn't be complete insanity to ditch the attributing entirely and just consider all <code>IComponent</code>-types as dependencies. 
-  But, it <em>would</em> ultimately be an assumption, and it could very well lead to some <em>just what exactly is going on behind the scenes?</em>-confusion.</p>
+  <p>It wouldn't be complete insanity to ditch the attributing entirely 
+    and just consider all <code>IComponent</code>-types as dependencies. 
+  But, it <em>would</em> ultimately be an assumption, and it could very well 
+  lead to some <em>just what exactly is going on behind the scenes?</em>-confusion.</p>
 </blockquote>
 
 						</td>
@@ -198,12 +211,23 @@ namespace ComponentKit.Model {
                 BindingFlags.NonPublic);
 
             foreach (FieldInfo field in fields) {
-                foreach (RequireComponentAttribute dependency in field.GetCustomAttributes(typeof(RequireComponentAttribute), false)) {
-                    Type[] matchingInterfaces = field.FieldType.FindInterfaces(IsTypeEqualToName, &quot;ComponentKit.IComponent&quot;);
+                foreach (RequireComponentAttribute dependency in 
+                            field.GetCustomAttributes(typeof(RequireComponentAttribute), false)) {
+                    Type componentType = field.FieldType;
 
-                    if (matchingInterfaces == null || matchingInterfaces.Length == 0) {
+                    if (IsComponent(componentType)) {
+                        if (dependency.Automatically) {
+                            if (componentType.GetConstructor(Type.EmptyTypes) == null) {
+                                throw new InvalidOperationException(
+                                    String.Format(CultureInfo.InvariantCulture,
+                                        &quot;This field can not be marked as a dependency because its type does not provide a parameter-less constructor.&quot;,
+                                        field.DeclaringType.ToString() + &quot;.&quot; + field.Name));
+                            }
+                        }
+                    } else {
                         throw new InvalidOperationException(
-                            String.Format(CultureInfo.InvariantCulture, &quot;This field can not be marked as a dependency because its type does not implement &#39;IComponent&#39;.&quot;, 
+                            String.Format(CultureInfo.InvariantCulture,
+                                &quot;This field can not be marked as a dependency because its type does not implement &#39;IComponent&#39;.&quot;,
                                 field.DeclaringType.ToString() + &quot;.&quot; + field.Name));
                     }
 
@@ -226,26 +250,6 @@ namespace ComponentKit.Model {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_8">&#182;</a>
 							</div>
-							<p>Determines whether the given string filter is equal to the name of the type.</p>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>        bool IsTypeEqualToName(Type m, object filterCriteria) {
-            if (filterCriteria is string) {
-                return m.Name == (string)filterCriteria;
-            }
-
-            return false;
-        }
-
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_9">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_9">&#182;</a>
-							</div>
 							<p>Occurs when the component is attached to an entity. All dependencies are injected.</p>
 
 						</td>
@@ -259,10 +263,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_10">
+					<tr id="section_9">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_10">&#182;</a>
+								<a class="pilcrow" href="#section_9">&#182;</a>
 							</div>
 							<p>Goes through all discovered dependencies and injects them one by one.</p>
 
@@ -277,13 +281,17 @@ namespace ComponentKit.Model {
                 FieldInfo field = pair.Key;
                 RequireComponentAttribute dependency = pair.Value;
 
+                if (!dependency.Automatically) {
+                    continue;
+                }
+
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_11">
+					<tr id="section_10">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_11">&#182;</a>
+								<a class="pilcrow" href="#section_10">&#182;</a>
 							</div>
 							<p>Determines which entity the dependency should be grabbed from. </p>
 
@@ -294,12 +302,13 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_12">
+					<tr id="section_11">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_12">&#182;</a>
+								<a class="pilcrow" href="#section_11">&#182;</a>
 							</div>
-							<p>The dependency will <strong>not</strong> be injected if the specified entity is not registered at the time.</p>
+							<p>The dependency will <strong>not</strong> be injected if the specified entity 
+is not registered at the time.</p>
 
 						</td>
 						<td class="code">
@@ -313,26 +322,27 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_13">
+					<tr id="section_12">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_13">&#182;</a>
+								<a class="pilcrow" href="#section_12">&#182;</a>
 							</div>
 							<p>Immediately attempt injecting the component.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>                InjectDependency(field, record, allowingDerivedTypes: dependency.AllowDerivedTypes);
+							<pre><code class='prettyprint'>                InjectDependency(field, record, 
+                    allowingDerivedTypes: dependency.AllowDerivedTypes);
             }
         }
 
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_14">
+					<tr id="section_13">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_14">&#182;</a>
+								<a class="pilcrow" href="#section_13">&#182;</a>
 							</div>
 							<p>Attempts to inject a component into a field, and adds the component to the specified entity.</p>
 
@@ -353,6 +363,10 @@ namespace ComponentKit.Model {
             if (dependency == null) {
                 dependency = Create(componentType);
 
+                if (dependency == null) {
+                    return;
+                }
+
                 record.Add(dependency);
             }
 
@@ -364,10 +378,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_15">
+					<tr id="section_14">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_15">&#182;</a>
+								<a class="pilcrow" href="#section_14">&#182;</a>
 							</div>
 							<p>Occurs when the component is dettached from an entity. All managed dependencies are null'ed.</p>
 
@@ -386,10 +400,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_16">
+					<tr id="section_15">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_16">&#182;</a>
+								<a class="pilcrow" href="#section_15">&#182;</a>
 							</div>
 							<p>Clears out all managed dependencies.</p>
 
@@ -402,40 +416,16 @@ namespace ComponentKit.Model {
                 field.SetValue(this, null);
             }
         }
-
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_17">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_17">&#182;</a>
-							</div>
-							<p>Helper method to create an instance of a specified type, and casting it to <code>IComponent</code></p>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>        static IComponent Create(Type type) {
-            IComponent result = null;
-
-            try {
-                result = Activator.CreateInstance(type) as IComponent;
-            } catch (MissingMethodException) {
-                throw new MissingMethodException(String.Format(CultureInfo.CurrentCulture,
-                    &quot;The component type &#39;{0}&#39; does not implement an empty constructor.&quot;, type.ToString()));
-            }
-
-            return result;
-        }
     }
 }
+
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_18">
+					<tr id="section_16">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_18">&#182;</a>
+								<a class="pilcrow" href="#section_16">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

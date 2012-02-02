@@ -37,6 +37,9 @@
 							<a class="source" href="../icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="../ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="../ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="../model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="../model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="../model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -368,7 +374,7 @@ Otherwise, if the entity actually had the same type of component attached to it,
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity) where T : IComponent {
+							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity) where T : class, IComponent {
             T component = default(T);
 
             return GetComponent(entity, component);
@@ -386,7 +392,7 @@ Otherwise, if the entity actually had the same type of component attached to it,
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity, T component) where T : IComponent {
+							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity, T component) where T : class, IComponent {
             if (entity == null) {
                 return default(T);
             }
@@ -488,7 +494,7 @@ Otherwise, if the entity actually had the same type of component attached to it,
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity, T component, bool allowingDerivedTypes) where T : IComponent {
+							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity, T component, bool allowingDerivedTypes) where T : class, IComponent {
             IDictionary&lt;Type, IComponent&gt; components = GetComponentsForRecord(entity);
 
             T result = default(T);
@@ -559,14 +565,11 @@ Otherwise, if the entity actually had the same type of component attached to it,
         public IEnumerator&lt;IEntityRecord&gt; GetEnumerator() {
             return _records.Keys.GetEnumerator();
         }
-
+        
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            return _records.Keys.GetEnumerator();
+            return GetEnumerator();
         }
-
-        List&lt;IComponent&gt; _desynchronizedComponents =
-            new List&lt;IComponent&gt;();
-
+        
 </code></pre>
 						</td>
 					</tr>
@@ -574,6 +577,21 @@ Otherwise, if the entity actually had the same type of component attached to it,
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_19">&#182;</a>
+							</div>
+							<p>Stores all components that have changed sync state since last synchronization operation; i.e. components that have been added or removed.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        List&lt;IComponent&gt; _desynchronizedComponents =
+            new List&lt;IComponent&gt;();
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_20">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_20">&#182;</a>
 							</div>
 							<p>This registry is considered out-of-sync as soon as there are components that have not yet been run through the triggers.</p>
 
@@ -589,10 +607,10 @@ Otherwise, if the entity actually had the same type of component attached to it,
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_20">
+					<tr id="section_21">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_20">&#182;</a>
+								<a class="pilcrow" href="#section_21">&#182;</a>
 							</div>
 							<p>It is conceivable that a component might change sync state several times before a synchronization operation occurs, 
 so there's no reason to keep growing this list more than necessary.</p>
@@ -610,10 +628,10 @@ so there's no reason to keep growing this list more than necessary.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_21">
+					<tr id="section_22">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_21">&#182;</a>
+								<a class="pilcrow" href="#section_22">&#182;</a>
 							</div>
 							<p>Sets a trigger that fires on components matching the specified predicate.</p>
 
@@ -632,10 +650,10 @@ so there's no reason to keep growing this list more than necessary.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_22">
+					<tr id="section_23">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_22">&#182;</a>
+								<a class="pilcrow" href="#section_23">&#182;</a>
 							</div>
 							<p>Clears out an existing trigger.</p>
 
@@ -652,10 +670,10 @@ so there's no reason to keep growing this list more than necessary.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_23">
+					<tr id="section_24">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_23">&#182;</a>
+								<a class="pilcrow" href="#section_24">&#182;</a>
 							</div>
 							<p>Runs the registered triggers for all components that have changed sync state since the previous synchronization operation.</p>
 
@@ -671,10 +689,10 @@ so there's no reason to keep growing this list more than necessary.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_24">
+					<tr id="section_25">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_24">&#182;</a>
+								<a class="pilcrow" href="#section_25">&#182;</a>
 							</div>
 							<p>Discovers all components that matches the predicate described by the <code>trigger</code></p>
 
@@ -698,10 +716,10 @@ so there's no reason to keep growing this list more than necessary.</p>
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_25">
+					<tr id="section_26">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_25">&#182;</a>
+								<a class="pilcrow" href="#section_26">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-	<title>IComponent.cs</title>
+	<title>IEntityDefinitionCollection.cs</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<link href="nocco.css" rel="stylesheet" media="all" type="text/css" />
 	<script src="prettify.js" type="text/javascript"></script>
@@ -86,7 +86,7 @@
 			<thead>
 				<tr>
 					<th class="docs">
-						<h1>IComponent.cs</h1>
+						<h1>IEntityDefinitionCollection.cs</h1>
 					</th>
 					<th class="code"></th>
 				</tr>
@@ -99,7 +99,7 @@
 							</div>
 							<h3>TL;DR..</h3>
 
-<p>A component only has one really important attribute. The parent entity.</p>
+<p>Lets you group components together, so you can later spawn them all in one line.</p>
 
 						</td>
 						<td class="code">
@@ -117,6 +117,7 @@
 						</td>
 						<td class="code">
 							<pre><code class='prettyprint'>using System;
+using System.Collections.Generic;
 
 namespace ComponentKit {
 </code></pre>
@@ -127,11 +128,12 @@ namespace ComponentKit {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_3">&#182;</a>
 							</div>
-							<p>Defines a component of an entity.</p>
+							<p>Describes a set of unique entity compositions, each defined by <code>TEntityDefinition</code>.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>    public interface IComponent : ISynchronizable {
+							<pre><code class='prettyprint'>    internal interface IEntityDefinitionCollection&lt;TEntityDefinition&gt; 
+        : IEnumerable&lt;TEntityDefinition&gt; {
 </code></pre>
 						</td>
 					</tr>
@@ -140,11 +142,11 @@ namespace ComponentKit {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_4">&#182;</a>
 							</div>
-							<p>Gets or sets the entity that this component is attached to.</p>
+							<p>Defines a range of components by name.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        IEntityRecord Record { get; set; }
+							<pre><code class='prettyprint'>        void Define(TEntityDefinition definition, params Type[] types);
 </code></pre>
 						</td>
 					</tr>
@@ -153,14 +155,11 @@ namespace ComponentKit {
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_5">&#182;</a>
 							</div>
-							<p>Receives a message containing arbitrary data.</p>
+							<p>Defines a range of components by name, with the option to include a previously defined range.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        void Receive&lt;T&gt;(string message, T data);
-    }
-}
-
+							<pre><code class='prettyprint'>        void Define(string definition, string inheritFromDefinition, params Type[] types);
 </code></pre>
 						</td>
 					</tr>
@@ -168,6 +167,61 @@ namespace ComponentKit {
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_6">&#182;</a>
+							</div>
+							<p>Removes the component definition for the given name.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        bool Undefine(TEntityDefinition definition);
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_7">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_7">&#182;</a>
+							</div>
+							<p>Removes all definitions.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        void Clear();
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_8">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_8">&#182;</a>
+							</div>
+							<p>Creates a new entity from the specified definition.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        IEntityRecord Make(TEntityDefinition definition);
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_9">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_9">&#182;</a>
+							</div>
+							<p>Realizes the specified definition for a given entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        IEntityRecord Make(TEntityDefinition definition, IEntityRecord entity);
+    }
+}
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_10">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_10">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

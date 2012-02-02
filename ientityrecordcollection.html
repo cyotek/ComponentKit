@@ -37,6 +37,9 @@
 							<a class="source" href="icomponent.html">
 								IComponent.cs
 							</a>
+							<a class="source" href="ientitydefinitioncollection.html">
+								IEntityDefinitionCollection.cs
+							</a>
 							<a class="source" href="ientityrecord.html">
 								IEntityRecord.cs
 							</a>
@@ -60,6 +63,9 @@
 							</a>
 							<a class="source" href="model/entity.html">
 								Model\Entity.cs
+							</a>
+							<a class="source" href="model/entitydefinitions.html">
+								Model\EntityDefinitions.cs
 							</a>
 							<a class="source" href="model/entityrecord.html">
 								Model\EntityRecord.cs
@@ -336,7 +342,7 @@ namespace ComponentKit {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        T GetComponent&lt;T&gt;(IEntityRecord entity) where T : IComponent;
+							<pre><code class='prettyprint'>        T GetComponent&lt;T&gt;(IEntityRecord entity) where T : class, IComponent;
 </code></pre>
 						</td>
 					</tr>
@@ -349,7 +355,7 @@ namespace ComponentKit {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        T GetComponent&lt;T&gt;(IEntityRecord entity, T component) where T : IComponent;
+							<pre><code class='prettyprint'>        T GetComponent&lt;T&gt;(IEntityRecord entity, T component) where T : class, IComponent;
 </code></pre>
 						</td>
 					</tr>
@@ -362,7 +368,7 @@ namespace ComponentKit {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        T GetComponent&lt;T&gt;(IEntityRecord entity, T component, bool allowingDerivedTypes) where T : IComponent;
+							<pre><code class='prettyprint'>        T GetComponent&lt;T&gt;(IEntityRecord entity, T component, bool allowingDerivedTypes) where T : class, IComponent;
 
 </code></pre>
 						</td>
@@ -419,6 +425,7 @@ namespace ComponentKit {
 							<pre><code class='prettyprint'>        IEnumerable&lt;IComponent&gt; this[IEntityRecord entity] { get; }
     }
 }
+
 </code></pre>
 						</td>
 					</tr>
