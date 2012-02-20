@@ -52,6 +52,9 @@
 							<a class="source" href="../isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="../typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="../model/component.html">
 								Model\Component.cs
 							</a>
@@ -221,7 +224,8 @@ namespace ComponentKit.Model {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public void Add(IEntityRecord entity, IComponent component) {
+							<pre><code class='prettyprint'>        public bool Add(IEntityRecord entity, IComponent component) {
+            bool componentSuccessfullyAttached = false;
             bool entityWasAlreadyRegistered = true;
 
             lock (_keyhole) {
@@ -256,6 +260,8 @@ namespace ComponentKit.Model {
                         }
 
                         PrepareComponentForSynchronization(component);
+
+                        componentSuccessfullyAttached = true;
                     }
                 }
             }
@@ -263,6 +269,8 @@ namespace ComponentKit.Model {
             if (!entityWasAlreadyRegistered) {
                 OnEntered(entity);
             }
+
+            return componentSuccessfullyAttached;
         }
 
 </code></pre>
@@ -374,8 +382,9 @@ Otherwise, if the entity actually had the same type of component attached to it,
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity) where T : class, IComponent {
-            T component = default(T);
+							<pre><code class='prettyprint'>        public TComponent GetComponent&lt;TComponent&gt;(IEntityRecord entity) 
+            where TComponent : class, IComponent {
+            TComponent component = default(TComponent);
 
             return GetComponent(entity, component);
         }
@@ -392,14 +401,15 @@ Otherwise, if the entity actually had the same type of component attached to it,
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity, T component) where T : class, IComponent {
+							<pre><code class='prettyprint'>        public TComponent GetComponent&lt;TComponent&gt;(IEntityRecord entity, TComponent component) 
+            where TComponent : class, IComponent {
             if (entity == null) {
-                return default(T);
+                return default(TComponent);
             }
 
             IDictionary&lt;Type, IComponent&gt; components = GetComponentsForRecord(entity);
 
-            T result = default(T);
+            TComponent result = default(TComponent);
 
             if (components != null &amp;&amp; components.Count &gt; 0) {
                 Type componentType = null;
@@ -407,11 +417,11 @@ Otherwise, if the entity actually had the same type of component attached to it,
                 if (component != null) {
                     componentType = component.GetType();
                 } else {
-                    componentType = typeof(T);
+                    componentType = typeof(TComponent);
                 }
 
                 if (components.ContainsKey(componentType)) {
-                    result = (T)components[componentType];
+                    result = (TComponent)components[componentType];
                 }
             }
 
@@ -494,15 +504,16 @@ Otherwise, if the entity actually had the same type of component attached to it,
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public T GetComponent&lt;T&gt;(IEntityRecord entity, T component, bool allowingDerivedTypes) where T : class, IComponent {
+							<pre><code class='prettyprint'>        public TComponent GetComponent&lt;TComponent&gt;(IEntityRecord entity, TComponent component, bool allowingDerivedTypes) 
+            where TComponent : class, IComponent {
             IDictionary&lt;Type, IComponent&gt; components = GetComponentsForRecord(entity);
 
-            T result = default(T);
+            TComponent result = default(TComponent);
 
             if (components != null &amp;&amp; components.Count &gt; 0) {
                 foreach (IComponent otherComponent in components.Values) {
-                    if (otherComponent is T) {
-                        result = (T)otherComponent;
+                    if (otherComponent is TComponent) {
+                        result = (TComponent)otherComponent;
 
                         break;
                     }

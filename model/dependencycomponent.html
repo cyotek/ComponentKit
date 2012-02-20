@@ -52,6 +52,9 @@
 							<a class="source" href="../isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="../typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="../model/component.html">
 								Model\Component.cs
 							</a>
@@ -215,7 +218,7 @@ is used to immediately discover the required dependencies.</p>
                             field.GetCustomAttributes(typeof(RequireComponentAttribute), false)) {
                     Type componentType = field.FieldType;
 
-                    if (IsComponent(componentType)) {
+                    if (CanCreate(componentType)) {
                         if (dependency.Automatically) {
                             if (componentType.GetConstructor(Type.EmptyTypes) == null) {
                                 throw new InvalidOperationException(

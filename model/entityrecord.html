@@ -52,6 +52,9 @@
 							<a class="source" href="../isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="../typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="../model/component.html">
 								Model\Component.cs
 							</a>
@@ -417,9 +420,9 @@ one when synchronized.</p>
 						<td class="code">
 							<pre><code class='prettyprint'>        public IComponent this[string componentNameOrType] {
             get {
-                return Registry == null ?
-                    null :
-                    Registry.GetComponent(this, Type.GetType(componentNameOrType));
+                return Registry != null ?
+                    Registry.GetComponent(this, Type.GetType(componentNameOrType)) :
+                    null;
             }
         }
         
@@ -435,12 +438,12 @@ one when synchronized.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public void Notify&lt;T&gt;(string message, T data) {
+							<pre><code class='prettyprint'>        public void Notify&lt;TData&gt;(string message, TData data) {
             if (Registry == null) {
                 return;
             }
             
-            foreach (IComponent component in (this as IEntityRecord).GetComponents()) {
+            foreach (IComponent component in this.GetComponents()) {
                 component.Receive(message, data);
             }
         }
@@ -488,7 +491,7 @@ that have been cast to <code>EntityRecord</code>. Not great.</p>
             string components = &quot;&quot;;
 
             foreach (IComponent component in this) {
-                components += String.Format(&quot;{0}{1}, &quot;, component.IsOutOfSync ? &quot;*&quot; : &quot;&quot;, component.GetType().Name);
+                components += String.Format(&quot;{0}, &quot;, component.ToString());
             }
 
             components = components.Remove(components.Length - 2);

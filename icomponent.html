@@ -52,6 +52,9 @@
 							<a class="source" href="isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="model/component.html">
 								Model\Component.cs
 							</a>
@@ -131,7 +134,7 @@ namespace ComponentKit {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>    public interface IComponent : ISynchronizable {
+							<pre><code class='prettyprint'>    public interface IComponent : ISynchronizable, IDisposable {
 </code></pre>
 						</td>
 					</tr>
@@ -157,7 +160,7 @@ namespace ComponentKit {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        void Receive&lt;T&gt;(string message, T data);
+							<pre><code class='prettyprint'>        void Receive&lt;TData&gt;(string message, TData data);
     }
 }
 

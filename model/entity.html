@@ -52,6 +52,9 @@
 							<a class="source" href="../isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="../typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="../model/component.html">
 								Model\Component.cs
 							</a>
@@ -117,6 +120,7 @@
 						</td>
 						<td class="code">
 							<pre><code class='prettyprint'>using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace ComponentKit.Model {
@@ -435,11 +439,15 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_21">&#182;</a>
 							</div>
-							<h3>Messaging</h3>
+							<p>Finds all entities in the active registry that have a component of the specified type attached to them.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>
+							<pre><code class='prettyprint'>        public static IEnumerable&lt;IEntityRecord&gt; FindAllWithComponent&lt;TComponent&gt;() 
+            where TComponent : class, IComponent {
+            return FindAllWithComponent&lt;TComponent&gt;(EntityRegistry.Current);
+        }
+
 </code></pre>
 						</td>
 					</tr>
@@ -448,12 +456,16 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_22">&#182;</a>
 							</div>
-							<p>Broadcasts a message to every single component that is currently attached to an entity in the active registry.</p>
+							<p>Finds all entities in a registry that have a component of the specified type attached to them.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static void Broadcast&lt;T&gt;(string message, T data) {
-            Broadcast(EntityRegistry.Current, message, data);
+							<pre><code class='prettyprint'>        public static IEnumerable&lt;IEntityRecord&gt; FindAllWithComponent&lt;TComponent&gt;(IEntityRecordCollection registry) 
+            where TComponent : class, IComponent {
+            return registry != null ? 
+                registry.Where(entity =&gt; 
+                    entity.HasComponent&lt;TComponent&gt;()) : 
+                null;
         }
 
 </code></pre>
@@ -464,11 +476,80 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_23">&#182;</a>
 							</div>
+							<p>Finds all entities in the active registry that have components of the specified types attached to them.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static IEnumerable&lt;IEntityRecord&gt; FindAllWithComponents&lt;TComponentA, TComponentB&gt;()
+            where TComponentA : class, IComponent
+            where TComponentB : class, IComponent {
+            return FindAllWithComponents&lt;TComponentA, TComponentB&gt;(EntityRegistry.Current);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_24">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_24">&#182;</a>
+							</div>
+							<p>Finds all entities in a registry that have components of the specified types attached to them.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static IEnumerable&lt;IEntityRecord&gt; FindAllWithComponents&lt;TComponentA, TComponentB&gt;(IEntityRecordCollection registry)
+            where TComponentA : class, IComponent
+            where TComponentB : class, IComponent {
+            return registry != null ?
+                registry.Where(entity =&gt; 
+                    entity.HasComponent&lt;TComponentA&gt;() &amp;&amp; 
+                    entity.HasComponent&lt;TComponentB&gt;()) :
+                null;
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_25">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_25">&#182;</a>
+							</div>
+							<h3>Messaging</h3>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_26">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_26">&#182;</a>
+							</div>
+							<p>Broadcasts a message to every single component that is currently attached to an entity in the active registry.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static void Broadcast&lt;TData&gt;(string message, TData data) {
+            Broadcast(EntityRegistry.Current, message, data);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_27">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_27">&#182;</a>
+							</div>
 							<p>Broadcasts a message to every single component that is currently attached to an entity in the specified registry.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static void Broadcast&lt;T&gt;(IEntityRecordCollection registry, string message, T data) {
+							<pre><code class='prettyprint'>        public static void Broadcast&lt;TData&gt;(IEntityRecordCollection registry, string message, TData data) {
             if (registry == null) {
                 return;
             }
@@ -482,10 +563,10 @@ The definition is only established if at least one valid component type is speci
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_24">
+					<tr id="section_28">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_24">&#182;</a>
+								<a class="pilcrow" href="#section_28">&#182;</a>
 							</div>
 							<p>Convenient methods for dealing with entities.</p>
 
@@ -495,79 +576,12 @@ The definition is only established if at least one valid component type is speci
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_25">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_25">&#182;</a>
-							</div>
-							<h3>Manipulation</h3>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_26">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_26">&#182;</a>
-							</div>
-							<p>Attaches a component to this entity.</p>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>        public static void Add(this IEntityRecord entity, IComponent component) {
-            if (entity.Registry != null) {
-                entity.Registry.Add(entity, component);
-            }
-        }
-
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_27">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_27">&#182;</a>
-							</div>
-							<p>Dettaches a component from this entity.</p>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>        public static bool Remove(this IEntityRecord entity, IComponent component) {
-            return entity.Registry != null ?
-                entity.Registry.Remove(entity, component) :
-                false;
-        }
-
-</code></pre>
-						</td>
-					</tr>
-					<tr id="section_28">
-						<td class="docs">
-							<div class="pilwrap">
-								<a class="pilcrow" href="#section_28">&#182;</a>
-							</div>
-							<p>Unregisters this entity from its registry.</p>
-
-						</td>
-						<td class="code">
-							<pre><code class='prettyprint'>        public static bool Drop(this IEntityRecord entity) {
-            return entity.Registry != null ?
-                entity.Registry.Drop(entity) :
-                false;
-        }
-
-</code></pre>
-						</td>
-					</tr>
 					<tr id="section_29">
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_29">&#182;</a>
 							</div>
-							<h3>Component retrieval</h3>
+							<h3>Manipulation</h3>
 
 						</td>
 						<td class="code">
@@ -580,14 +594,16 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_30">&#182;</a>
 							</div>
-							<p>Returns a component of the specified type if it is attached to this entity.</p>
+							<p>Attaches a component to this entity.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity) where T : class, IComponent {
-            return entity.Registry == null ?
-                default(T) :
-                entity.Registry.GetComponent&lt;T&gt;(entity);
+							<pre><code class='prettyprint'>        public static bool Add(this IEntityRecord entity, IComponent component) {
+            if (entity.Registry != null) {
+                return entity.Registry.Add(entity, component);
+            }
+
+            return false;
         }
 
 </code></pre>
@@ -598,14 +614,16 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_31">&#182;</a>
 							</div>
-							<p>Returns a component of the specified type if it is attached to this entity.</p>
+							<p>Dettaches a component from this entity.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity, T component) where T : class, IComponent {
-            return entity.Registry == null ?
-                default(T) :
-                entity.Registry.GetComponent(entity, component);
+							<pre><code class='prettyprint'>        public static bool Remove(this IEntityRecord entity, IComponent component) {
+            if (entity.Registry != null) {
+                return entity.Registry.Remove(entity, component);
+            }
+
+            return false;
         }
 
 </code></pre>
@@ -616,14 +634,16 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_32">&#182;</a>
 							</div>
-							<p>If <code>allowingDerivedTypes</code> is <code>true</code>, returns any component that is either a subclass of, or is, the specified type if it is attached to this entity.</p>
+							<p>Unregisters this entity from its registry.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static T GetComponent&lt;T&gt;(this IEntityRecord entity, T component, bool allowingDerivedTypes) where T : class, IComponent {
-            return entity.Registry == null ?
-                default(T) :
-                entity.Registry.GetComponent(entity, component, allowingDerivedTypes);
+							<pre><code class='prettyprint'>        public static bool Drop(this IEntityRecord entity) {
+            if (entity.Registry != null) {
+                return entity.Registry.Drop(entity);
+            }
+
+            return false;
         }
 
 </code></pre>
@@ -634,38 +654,11 @@ The definition is only established if at least one valid component type is speci
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_33">&#182;</a>
 							</div>
-							<p>Gets all components currently attached to this entity.</p>
+							<h3>Component retrieval</h3>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static IEnumerable&lt;IComponent&gt; GetComponents(this IEntityRecord entity) {
-            return entity.Registry == null ?
-                null :
-                entity.Registry.GetComponents(entity);
-        }
-        /*
-        public static IEnumerable&lt;T&gt; GetComponents&lt;T&gt;(this IEntityRecord entity) where T : class, IComponent {
-            IList&lt;T&gt; components = new List&lt;T&gt;();
-
-            foreach (IComponent component in entity) {
-                if (component is T) {
-                    components.Add(component as T);
-                }
-            }
-
-            return components;
-        }
-        */
-        public static bool HasComponent&lt;T&gt;(this IEntityRecord entity) where T : class, IComponent {
-            return GetComponent&lt;T&gt;(entity) != null;
-        }
-
-        public static bool HasComponent&lt;T&gt;(this IEntityRecord entity, T component) where T : class, IComponent {
-            return GetComponent&lt;T&gt;(entity, component) != null;
-        }
-    }
-}
-
+							<pre><code class='prettyprint'>
 </code></pre>
 						</td>
 					</tr>
@@ -673,6 +666,101 @@ The definition is only established if at least one valid component type is speci
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_34">&#182;</a>
+							</div>
+							<p>Returns a component of the specified type if it is attached to this entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static TComponent GetComponent&lt;TComponent&gt;(this IEntityRecord entity) 
+            where TComponent : class, IComponent {
+            if (entity.Registry != null) {
+                return entity.Registry.GetComponent&lt;TComponent&gt;(entity);
+            }
+
+            return default(TComponent);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_35">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_35">&#182;</a>
+							</div>
+							<p>Returns a component of the specified type if it is attached to this entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static TComponent GetComponent&lt;TComponent&gt;(this IEntityRecord entity, TComponent component) 
+            where TComponent : class, IComponent {
+            if (entity.Registry != null) {
+                return entity.Registry.GetComponent(entity, component);
+            }
+
+            return default(TComponent);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_36">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_36">&#182;</a>
+							</div>
+							<p>If <code>allowingDerivedTypes</code> is <code>true</code>, returns any component that is either a subclass of, or is, the specified type if it is attached to this entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static TComponent GetComponent&lt;TComponent&gt;(this IEntityRecord entity, TComponent component, bool allowingDerivedTypes) 
+            where TComponent : class, IComponent {
+            if (entity.Registry != null) {
+                return entity.Registry.GetComponent(entity, component, allowingDerivedTypes);
+            }
+            
+            return default(TComponent);
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_37">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_37">&#182;</a>
+							</div>
+							<p>Gets all components currently attached to this entity.</p>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        public static IEnumerable&lt;IComponent&gt; GetComponents(this IEntityRecord entity) {
+            if (entity.Registry != null) {
+                return entity.Registry.GetComponents(entity);
+            }
+
+            return null;
+        }
+ 
+        public static bool HasComponent&lt;TComponent&gt;(this IEntityRecord entity) 
+            where TComponent : class, IComponent {
+            return GetComponent&lt;TComponent&gt;(entity) != null;
+        }
+
+        public static bool HasComponent&lt;TComponent&gt;(this IEntityRecord entity, TComponent component) 
+            where TComponent : class, IComponent {
+            return GetComponent&lt;TComponent&gt;(entity, component) != null;
+        }
+    }
+}
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_38">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_38">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 

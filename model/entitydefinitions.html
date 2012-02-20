@@ -52,6 +52,9 @@
 							<a class="source" href="../isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="../typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="../model/component.html">
 								Model\Component.cs
 							</a>
@@ -171,7 +174,8 @@ The definition is only established if at least one valid component type is speci
                 return;
             }
 
-            List&lt;Type&gt; componentTypes = new List&lt;Type&gt;();
+            List&lt;Type&gt; componentTypes = 
+                new List&lt;Type&gt;();
 
             if (inheritFromDefinition != null &amp;&amp; _definitions.ContainsKey(inheritFromDefinition)) {
                 componentTypes.AddRange(_definitions[inheritFromDefinition]);
@@ -179,7 +183,7 @@ The definition is only established if at least one valid component type is speci
 
             foreach (Type type in types) {
                 bool adheresToConstraints = 
-                    Component.IsComponent(type) &amp;&amp; 
+                    Component.CanCreate(type) &amp;&amp; 
                     type.GetConstructor(Type.EmptyTypes) != null &amp;&amp;
                     !componentTypes.Contains(type);
 

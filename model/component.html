@@ -52,6 +52,9 @@
 							<a class="source" href="../isyncstate.html">
 								ISyncState.cs
 							</a>
+							<a class="source" href="../typeextensions.html">
+								TypeExtensions.cs
+							</a>
 							<a class="source" href="../model/component.html">
 								Model\Component.cs
 							</a>
@@ -128,9 +131,10 @@ are not guaranteed to be notified of this immediately. For example, the default 
 						</td>
 						<td class="code">
 							<pre><code class='prettyprint'>using System;
-using System.Globalization;
 
 namespace ComponentKit.Model {
+
+
 </code></pre>
 						</td>
 					</tr>
@@ -227,6 +231,13 @@ namespace ComponentKit.Model {
             }
         }
 
+        public override string ToString() {
+            return String.Format(
+                &quot;{0}{1}&quot;, 
+                GetType().GetPrettyName(),
+                IsOutOfSync ? &quot;*&quot; : string.Empty);
+        }
+
 </code></pre>
 						</td>
 					</tr>
@@ -317,7 +328,7 @@ namespace ComponentKit.Model {
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public virtual void Receive&lt;T&gt;(string message, T data) { }
+							<pre><code class='prettyprint'>        public virtual void Receive&lt;TData&gt;(string message, TData data) { }
 
 </code></pre>
 						</td>
@@ -326,6 +337,54 @@ namespace ComponentKit.Model {
 						<td class="docs">
 							<div class="pilwrap">
 								<a class="pilcrow" href="#section_13">&#182;</a>
+							</div>
+							<blockquote>
+  <p><code>IDisposable</code> pattern implementation as described in
+  <a href="http://www.amazon.com/Engine-Toolset-Development-Graham-Wihlidal/dp/1592009638">Game Engine Toolset Development</a> by Graham Wihlidal.</p>
+</blockquote>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>        ~Component() {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose() {
+            Dispose(disposing: true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing) {
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_14">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_14">&#182;</a>
+							</div>
+							<blockquote>
+  <p>Preventing any multi-threading issues by locking this instance.
+  Sub-classes should also lock, and should call <code>base.Dispose(disposing)</code> last, within the lock context.</p>
+</blockquote>
+
+						</td>
+						<td class="code">
+							<pre><code class='prettyprint'>            lock (this) {
+                if (disposing) {
+                    
+                }
+            }
+        }
+
+</code></pre>
+						</td>
+					</tr>
+					<tr id="section_15">
+						<td class="docs">
+							<div class="pilwrap">
+								<a class="pilcrow" href="#section_15">&#182;</a>
 							</div>
 							<p>Helper method to create an instance of a specified type, and casting it to <code>IComponent</code></p>
 
@@ -337,7 +396,7 @@ namespace ComponentKit.Model {
             try {
                 result = Activator.CreateInstance(type) as IComponent;
             } catch (MissingMethodException) {
-                throw new MissingMethodException(String.Format(CultureInfo.CurrentCulture,
+                throw new MissingMethodException(String.Format(
                     &quot;The component type &#39;{0}&#39; does not provide a parameter-less constructor.&quot;, type.ToString()));
             }
 
@@ -347,20 +406,21 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_14">
+					<tr id="section_16">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_14">&#182;</a>
+								<a class="pilcrow" href="#section_16">&#182;</a>
 							</div>
 							<p>Determines whether the given type implements the <code>IComponent</code> interface.</p>
 
 						</td>
 						<td class="code">
-							<pre><code class='prettyprint'>        public static bool IsComponent(Type type) {
+							<pre><code class='prettyprint'>        public static bool CanCreate(Type type) {
             Type[] matchingInterfaces = type.FindInterfaces(
                 IsTypeEqualToName, &quot;ComponentKit.IComponent&quot;);
 
-            if (matchingInterfaces != null &amp;&amp; matchingInterfaces.Length != 0) {
+            if (matchingInterfaces != null &amp;&amp; 
+                matchingInterfaces.Length != 0) {
                 return true;
             }
 
@@ -370,10 +430,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_15">
+					<tr id="section_17">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_15">&#182;</a>
+								<a class="pilcrow" href="#section_17">&#182;</a>
 							</div>
 							<p>Determines whether the given string filter is equal to the name of the type.</p>
 
@@ -392,10 +452,10 @@ namespace ComponentKit.Model {
 </code></pre>
 						</td>
 					</tr>
-					<tr id="section_16">
+					<tr id="section_18">
 						<td class="docs">
 							<div class="pilwrap">
-								<a class="pilcrow" href="#section_16">&#182;</a>
+								<a class="pilcrow" href="#section_18">&#182;</a>
 							</div>
 							<p>Copyright 2012 Jacob H. Hansen.</p>
 
